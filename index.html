@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>Sudzai AI: describe it, we build it</title>
+<style>
+:root{--bg:#050b24;--ink:#eef3ff;--mute:#a3b4e6;--line:rgba(255,255,255,.14);--glass:rgba(255,255,255,.06);--a:#6aa0ff;--b:#7ee8ff;--c:#b58cff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*:before,*:after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg);overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(60% 50% at 20% 0%,rgba(106,160,255,.35),transparent 70%),radial-gradient(50% 40% at 90% 10%,rgba(181,140,255,.28),transparent 70%),linear-gradient(180deg,#050b24,#0a1c5a 70%,#102f7a)}
+a{color:inherit;text-decoration:none}
+button,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--b);outline-offset:2px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+.nav{position:sticky;top:0;z-index:20;backdrop-filter:blur(12px);background:rgba(5,11,36,.6);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:18px;height:60px}
+.logo{display:flex;align-items:center;gap:9px;font-weight:700;margin-right:auto}
+.logo i{width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,var(--b),var(--a),var(--c))}
+.nav a.l{color:var(--mute);font-size:15px}.nav a.l:hover{color:var(--ink)}
+.btn{display:inline-block;border:0;border-radius:12px;padding:11px 20px;font-weight:700;color:#04123a;background:linear-gradient(135deg,var(--b),var(--a));cursor:pointer}
+.btn.s{padding:8px 14px;font-size:14px}
+.btn:disabled{opacity:.5;cursor:wait}
+.ghost{background:var(--glass);border:1px solid var(--line);border-radius:10px;padding:8px 12px;cursor:pointer}
+.hero{padding:9vh 0 60px;text-align:center}
+.pill{display:inline-block;margin:0 0 18px;padding:5px 14px;border:1px solid var(--line);border-radius:99px;background:var(--glass);color:var(--mute);font-size:14px}
+h1{font-size:clamp(34px,7.2vw,64px);line-height:1.06;letter-spacing:-.03em;margin:0 auto 16px;max-width:15ch;background:linear-gradient(180deg,#fff,#b9ccff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{max-width:560px;margin:0 auto 30px;color:var(--mute);font-size:18px}
+.prompt{max-width:720px;margin:0 auto;text-align:left;background:rgba(10,20,60,.7);border:1px solid var(--line);border-radius:22px;padding:14px;box-shadow:0 24px 70px rgba(0,0,0,.45),0 0 0 6px rgba(106,160,255,.08)}
+.prompt textarea{width:100%;height:110px;resize:none;border:0;background:transparent;font-size:18px;padding:6px;outline:none}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--glass);border-radius:99px;padding:6px 13px;font-size:14px;cursor:pointer}
+.chip[aria-pressed=true]{border-color:var(--b);background:rgba(126,232,255,.14)}
+.note{margin:18px auto 0;max-width:520px;color:var(--mute);font-size:13px}
+.ex{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.ex button{font-size:14px;color:var(--mute)}
+section{padding:56px 0}
+h2{font-size:clamp(26px,4.6vw,38px);line-height:1.15;letter-spacing:-.02em;margin:0 0 10px;text-align:center}
+.lead{text-align:center;color:var(--mute);max-width:560px;margin:0 auto 32px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.card{background:var(--glass);border:1px solid var(--line);border-radius:18px;padding:22px}
+.card h3{margin:10px 0 6px;font-size:18px}.card p{margin:0;color:var(--mute);font-size:15px}
+.num{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;font-weight:700;color:#04123a;background:linear-gradient(135deg,var(--b),var(--c))}
+svg{width:28px;height:28px;fill:none;stroke:var(--b);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.cta{text-align:center;border:1px solid var(--line);border-radius:26px;padding:48px 20px;background:linear-gradient(135deg,rgba(106,160,255,.18),rgba(181,140,255,.14))}
+footer{padding:30px 0 40px;color:var(--mute);font-size:14px;text-align:center}
+#studio{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;background:#070f33;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+#studio[hidden]{display:none}
+.bar{display:flex;gap:6px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.bar b{margin-right:auto}
+#msg{padding:8px 14px;color:var(--mute);font-size:14px;min-height:38px}
+#msg.err{color:#ffb4a8}
+#frame{flex:1;width:100%;border:0;background:#fff;min-height:0}
+.edit{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--line)}
+.edit input{flex:1;min-width:0;font:inherit;font-size:16px;color:var(--ink);background:var(--glass);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+@media(max-width:560px){.nav a.l{display:none}}
+</style>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+ <a class="logo" href="#top"><i></i>Sudzai AI</a>
+ <a class="l" href="#how">How it works</a><a class="l" href="#types">What you can build</a>
+ <a class="btn s" href="#try">Start building</a>
+</div></header>
+
+<main id="top">
+<section class="hero" id="try"><div class="wrap">
+ <p class="pill">Ideas in. Working sites out.</p>
+ <h1>Build something great by describing it</h1>
+ <p class="sub">Tell Sudzai AI what you need. Get a website, slide deck, app or prototype in minutes, then refine it by chatting.</p>
+ <form class="prompt" id="f">
+  <textarea id="p" placeholder="Describe what you want to build..." aria-label="Describe what you want to build" required></textarea>
+  <div class="row">
+   <div class="chips" id="chips" role="group" aria-label="Project type"></div>
+   <button class="btn" id="go">Generate</button>
+  </div>
+ </form>
+ <div class="ex" id="ex"></div>
+ <p class="note">Your description is sent to an AI service to build the page. Each visitor gets a few free builds per day.</p>
+</div></section>
+
+<section id="how"><div class="wrap">
+ <h2>From idea to live page in three steps</h2>
+ <p class="lead">No design skills and no code needed.</p>
+ <div class="grid">
+  <div class="card"><div class="num">1</div><h3>Describe it</h3><p>Write what you want in plain words: the business, the sections, the style.</p></div>
+  <div class="card"><div class="num">2</div><h3>Watch it appear</h3><p>Sudzai AI writes the page and shows a live preview you can scroll and tap.</p></div>
+  <div class="card"><div class="num">3</div><h3>Refine and keep it</h3><p>Ask for changes in chat, undo anything, then download the finished file.</p></div>
+ </div>
+</div></section>
+
+<section id="types"><div class="wrap">
+ <h2>One builder, four kinds of projects</h2>
+ <p class="lead">Pick a type and describe it.</p>
+ <div class="grid">
+  <div class="card"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18"/></svg><h3>Websites</h3><p>One-page sites for shops, studios, portfolios and events.</p></div>
+  <div class="card"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4M8 20h8"/></svg><h3>Slides</h3><p>Clean decks with simple navigation, ready to present.</p></div>
+  <div class="card"><svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg><h3>Apps</h3><p>Small interactive tools like trackers and calculators.</p></div>
+  <div class="card"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/><path d="M11 7h4a2 2 0 0 1 2 2v4"/></svg><h3>Prototypes</h3><p>Clickable screens to test an idea before you build it.</p></div>
+ </div>
+</div></section>
+
+<section><div class="wrap">
+ <h2>Made for getting things done</h2>
+ <p class="lead">&nbsp;</p>
+ <div class="grid">
+  <div class="card"><h3>Edit by chatting</h3><p>Say “make the header bigger” and watch it change.</p></div>
+  <div class="card"><h3>Mobile-first</h3><p>Every page is built to look right on a phone first.</p></div>
+  <div class="card"><h3>You own the code</h3><p>Download a single clean file and host it anywhere.</p></div>
+  <div class="card"><h3>Honest placeholders</h3><p>Missing details show as [Phone number], never invented facts.</p></div>
+ </div>
+</div></section>
+
+<section><div class="wrap"><div class="cta">
+ <h2>Ready to build your first page?</h2>
+ <p class="lead">It takes one sentence to start.</p>
+ <a class="btn" href="#try">Start building</a>
+</div></div></section>
+</main>
+<footer>&copy; Sudzai AI. Built with care.</footer>
+
+<div id="studio" hidden role="dialog" aria-label="Preview">
+ <div class="bar"><b>Preview</b><button class="ghost" id="undo">Undo</button><button class="ghost" id="copy">Copy code</button><button class="btn s" id="dl">Download</button><button class="ghost" id="close">Close</button></div>
+ <div id="msg" role="status"></div>
+ <iframe id="frame" title="Generated page" sandbox="allow-scripts allow-forms allow-popups"></iframe>
+ <form class="edit" id="ef"><input id="ep" placeholder="Ask for a change..." aria-label="Ask for a change"><button class="btn s" id="eg">Send</button></form>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+// After creating your Cloudflare Worker, paste its address between the quotes:
+const API_URL="https://sudzai-ai.sudaishmz81.workers.dev";
+const T={website:["Website"],slides:["Slides"],app:["App"],proto:["Prototype"]};
+const EX=["A one-page site for a barber shop with services and booking","A 6-slide pitch for a coffee subscription","A habit tracker with a streak counter"];
+let type="website",html="",hist=[],busy=false,ac=null;
+function chips(){$("chips").innerHTML=Object.keys(T).map(k=>'<button type="button" class="chip" data-t="'+k+'" aria-pressed="'+(k===type)+'">'+T[k][0]+'</button>').join("")}
+$("chips").onclick=e=>{const b=e.target.closest(".chip");if(b){type=b.dataset.t;chips()}};
+$("ex").innerHTML=EX.map(t=>'<button type="button" class="ghost">'+t+'</button>').join("");
+$("ex").onclick=e=>{const b=e.target.closest("button");if(b){$("p").value=b.textContent;$("p").focus()}};
+chips();
+const clean=t=>t.replace(/^\s*```(?:html)?\s*/i,"").replace(/\s*```\s*$/,"").trim();
+function say(t,err){$("msg").textContent=t;$("msg").className=err?"err":""}
+function show(h){html=h;$("frame").srcdoc=h}
+async function run(p){
+ busy=true;$("go").disabled=true;$("eg").textContent="Stop";say("Building\u2026 this can take up to a minute.");ac=new AbortController();
+ try{
+  if(API_URL.includes("YOUR-WORKER"))throw{msg:"The builder isn\u2019t connected yet."};
+  const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type:type,prompt:p,html:html}),signal:ac.signal});
+  let j={};try{j=await r.json()}catch(e){}
+  if(!r.ok||!j.html)throw{msg:j.error||"Something went wrong ("+r.status+")."};
+  hist.push(html);show(j.html);say("Done. Ask for a change below, or download it.");
+ }catch(e){
+  const stop=e&&e.name==="AbortError";
+  say(stop?"Stopped.":(e&&e.msg)||"Couldn\u2019t reach the server. Check your connection.",!stop);
+ }
+ busy=false;ac=null;$("go").disabled=false;$("eg").textContent="Send";
+}
+$("f").onsubmit=e=>{e.preventDefault();const p=$("p").value.trim();if(!p||busy)return;html="";hist=[];$("frame").srcdoc="";$("studio").hidden=false;run(p)};
+$("ef").onsubmit=e=>{e.preventDefault();if(busy){ac&&ac.abort();return}const p=$("ep").value.trim();if(!p)return;$("ep").value="";run(p)};
+$("close").onclick=()=>{if(ac)ac.abort();$("studio").hidden=true};
+$("undo").onclick=()=>{if(hist.length){show(hist.pop());say("Reverted to the previous version.")}};
+$("copy").onclick=async()=>{try{await navigator.clipboard.writeText(html);say("Code copied.")}catch(e){say("Copy isn\u2019t available here. Use Download.",1)}};
+$("dl").onclick=()=>{
+ if(!html){say("Nothing to download yet.",1);return}
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([html],{type:"text/html"}));a.download="index.html";a.click();
+};
+</script>
+</body>
+</html>
